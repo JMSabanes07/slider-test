@@ -19,25 +19,6 @@ export const GlobalStyles = createGlobalStyle`
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    scrollbar-color: transparent transparent; /* thumb and track color */
-    scrollbar-width: 0px;
-  }
-
-  *::-webkit-scrollbar {
-    width: 0;
-  }
-
-  *::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  *::-webkit-scrollbar-thumb {
-    background: transparent;
-    border: none;
-  }
-
-  * {
-    -ms-overflow-style: none;
   }
   
 

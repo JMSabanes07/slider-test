@@ -10,6 +10,10 @@ export const ItemsContainer = styled.div`
   overflow-x: scroll;
   scroll-snap-type: x mandatory;
   height: 100%;
+  scrollbar-width: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 export const Item = styled.div`
