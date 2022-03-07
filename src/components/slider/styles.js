@@ -13,10 +13,14 @@ export const ItemsContainer = styled.div`
 `
 
 export const Item = styled.div`
+  display: grid;
+  place-content: center;
   scroll-snap-align: center;
   flex-shrink: 0;
   width: 100%;
   border: 2px solid black;
+  font-size: 2rem;
+  font-weight: 900;
 `
 
 export const NavigationContainer = styled.div`
@@ -39,6 +43,24 @@ export const NavigationItem = styled.div`
   width: 40px;
   height: 40px;
   background: red;
+  border-radius: 50%;
+  cursor: pointer;
+  pointer-events: all;
+`
+
+export const DotsContainer = styled.div`
+  justify-self: center;
+  display: grid;
+  grid-auto-flow: column;
+  gap: 0.3rem;
+
+  position: absolute;
+  bottom: 1rem;
+`
+export const Dot = styled.div`
+  background: ${({ active }) => (active ? 'white' : 'black')};
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
   cursor: pointer;
   pointer-events: all;

@@ -5,43 +5,81 @@ import {
   Item,
   NavigationContainer,
   NavigationItem,
+  DotsContainer,
+  Dot,
 } from './styles'
 
-const Navigator = ({ children }) => {
-  return <NavigationItem>{children}</NavigationItem>
+const Navigator = ({ children, onClick }) => {
+  return <NavigationItem onClick={onClick}>{children}</NavigationItem>
 }
 
 const Slider = () => {
-  const [observers, setObservers] = useState([])
-  const itemsContainerRef = useRef()
+  const [inView, setInView] = useState()
+  const container = useRef()
+  const items = useRef([])
 
-  const handleObserver = (entradas) => {
-    console.log(entradas)
+  const randomColor = () => '#' + (((1 << 24) * Math.random()) | 0).toString(16)
+
+  const slideRight = () => {
+    const next = inView.nextSibling
+    const first = items.current[0]
+    if (!next) return first?.scrollIntoView({ behavior: 'smooth' })
+    next?.scrollIntoView({ behavior: 'smooth' })
   }
-  const observador = new IntersectionObserver(handleObserver, {
-    root: null,
-    rootMargin: '0px',
-    threshold: 1,
-  })
+  const slideLeft = () => {
+    const prev = inView.previousSibling
+    const last = items.current[items.current.length - 1]
+    if (!prev) return last?.scrollIntoView({ behavior: 'smooth' })
+    prev?.scrollIntoView({ behavior: 'smooth' })
+  }
+  const slideTo = (item) => {
+    item?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   useEffect(() => {
-    itemsContainerRef.current.childNodes.forEach((item) => {
-      observador.observe(item)
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setInView(entry.target)
+          }
+        })
+      },
+      {
+        root: container.target,
+        threshold: 0.9,
+      }
+    )
+    items.current.forEach((item) => {
+      observer.observe(item)
+      item.setAttribute('style', `background: ${randomColor()}`)
     })
-  }, [itemsContainerRef])
+  }, [])
 
   return (
     <SliderContainer>
-      <ItemsContainer ref={itemsContainerRef} className="a">
-        <Item>1</Item>
-        <Item>2</Item>
-        <Item>3</Item>
-        <Item>4</Item>
+      <ItemsContainer ref={container} className="a">
+        {[1, 2, 3, 4, 5, 6, 7].map((item, i) => {
+          return (
+            <Item key={i} ref={(e) => (items.current[i] = e)}>
+              {item}
+            </Item>
+          )
+        })}
       </ItemsContainer>
 
       <NavigationContainer>
-        <Navigator>{'<'}</Navigator>
-        <Navigator>{'>'}</Navigator>
-        {/* <Dots></Dots> */}
+        <Navigator onClick={slideLeft}>{'<'}</Navigator>
+        <Navigator onClick={slideRight}>{'>'}</Navigator>
+        <DotsContainer>
+          {items.current.map((item, i) => (
+            <Dot
+              key={i}
+              active={inView === item}
+              onClick={() => slideTo(item)}
+            />
+          ))}
+        </DotsContainer>
       </NavigationContainer>
     </SliderContainer>
   )
